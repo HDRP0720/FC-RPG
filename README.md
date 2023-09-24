@@ -5,5 +5,12 @@
 
 ## 캐릭터 이동 구현
 * Rigidbody를 이용한 구현
+  * Jump & Dash
+    ```math
+    \displaylines{
+    jumpVelocity = \sqrt{(-2g * jumpHeight)}\\
+    dashVelocity_{xz} = \vec{T_{xz}} \times dashDistance \times log{(t * drag  + 1)} \times { {1 \over t}}
+    }
+    ```
 * Character Controller를 이용한 구현
 * Navmesh agent를 이용한 구현

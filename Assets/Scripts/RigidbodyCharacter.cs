@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class RigidbodyCharacter : MonoBehaviour
@@ -12,7 +11,7 @@ public class RigidbodyCharacter : MonoBehaviour
 
   private Rigidbody rb;
   private Vector3 inputDirection = Vector3.zero;
-  private bool bIsGround = false;
+  private bool bIsGrounded;
   #endregion
 
   private void Start()
@@ -31,7 +30,7 @@ public class RigidbodyCharacter : MonoBehaviour
       transform.forward = inputDirection;
     
     // Implement character jump by user input
-    if (Input.GetButtonDown("Jump") && bIsGround)
+    if (Input.GetButtonDown("Jump") && bIsGrounded)
     {
       Vector3 jumpVelocity = Vector3.up * Mathf.Sqrt(jumpHeight * -2f * Physics.gravity.y);
       rb.AddForce(jumpVelocity, ForceMode.VelocityChange);
@@ -41,9 +40,9 @@ public class RigidbodyCharacter : MonoBehaviour
     if (Input.GetButtonDown("Dash"))
     {
       Vector3 dashVelocity = Vector3.Scale(transform.forward, 
-        dashDistance * new Vector3((Mathf.Log(1f / (Time.deltaTime * rb.drag + 1)) / -Time.deltaTime),
+        dashDistance * new Vector3((Mathf.Log(Time.deltaTime * rb.drag + 1) / Time.deltaTime),
         0,
-        (Mathf.Log(1f / (Time.deltaTime * rb.drag + 1)) / -Time.deltaTime)));
+        (Mathf.Log(Time.deltaTime * rb.drag + 1) / Time.deltaTime)));
       rb.AddForce(dashVelocity, ForceMode.VelocityChange);
     }
   }
@@ -54,15 +53,14 @@ public class RigidbodyCharacter : MonoBehaviour
 
   private void CheckGround()
   {
-    RaycastHit hitInfo;
     Vector3 rayOrigin = transform.position + (Vector3.up * 0.1f);
-    if (Physics.Raycast(rayOrigin,Vector3.down, out hitInfo, groundCheckDistance, groundLayerMask))
+    if (Physics.Raycast(rayOrigin,Vector3.down, out _, groundCheckDistance, groundLayerMask))
     {
-      bIsGround = true;
+      bIsGrounded = true;
     }
     else
     {
-      bIsGround = false;
+      bIsGrounded = false;
     }
     #if UNITY_EDITOR
     Debug.DrawLine(rayOrigin, rayOrigin + Vector3.down * groundCheckDistance, Color.red);
