@@ -22,21 +22,18 @@ public class CameraController : MonoBehaviour
     HandleCamera();
   }
 
-  private void HandleCamera()
+  public void HandleCamera()
   {
     if (!target) return;
 
     Vector3 worldPosition = (Vector3.forward * -distance) + (Vector3.up * height);
-    Debug.DrawLine(target.position, worldPosition, Color.red);
 
     Vector3 rotatedVector = Quaternion.AngleAxis(angle, Vector3.up) * worldPosition;
-    Debug.DrawLine(target.position, rotatedVector, Color.green);
 
     Vector3 finalTargetPosition = target.position;
     finalTargetPosition.y += lookAtHeight;
 
     Vector3 finalPosition = finalTargetPosition + rotatedVector;
-    Debug.DrawLine(target.position, finalPosition, Color.blue);
     
     transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref refVelocity, smoothSpeed);
     
