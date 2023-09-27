@@ -14,3 +14,12 @@
     ```
 * Character Controller를 이용한 구현
 * Navmesh agent를 이용한 구현
+
+## Recources From
+* mixamo character
+  * Y bot
+* mixamo animation
+  * Standing short idle
+  * Sad idle variation 1
+  * Breathing idle
+  * Walking with a swagger

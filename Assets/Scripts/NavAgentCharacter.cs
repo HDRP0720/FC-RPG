@@ -10,15 +10,19 @@ public class NavAgentCharacter : MonoBehaviour
   public LayerMask groundLayerMask;
   
   private CharacterController cc;
+  private Animator animator;
   private NavMeshAgent agent;
   private Camera mainCamera;
   private LineRenderer lr;
   private Coroutine draw;
+
+  private readonly int moveHash = Animator.StringToHash("Move");
   #endregion
 
   private void Start()
   {
     cc = GetComponent<CharacterController>();
+    animator = GetComponent<Animator>();
     agent = GetComponent<NavMeshAgent>();
     agent.updatePosition = false;
     agent.updateRotation = true;
@@ -52,10 +56,13 @@ public class NavAgentCharacter : MonoBehaviour
     if (agent.remainingDistance > agent.stoppingDistance)
     {
       cc.Move(agent.velocity * Time.deltaTime);
+      animator.SetBool(moveHash, true);
     }
     else
     {
       cc.Move(Vector3.zero);
+      animator.SetBool(moveHash, false);
+      
       clickMark.gameObject.SetActive(false);
       lr.enabled = false;
       if(draw != null) StopCoroutine(draw);
