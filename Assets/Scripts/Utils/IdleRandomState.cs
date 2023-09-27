@@ -22,8 +22,6 @@ public class IdleRandomState : StateMachineBehaviour
   // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
   public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
   {
-    Debug.Log($"INT: {animator.GetInteger(hashRandomIdle)} , Time: {randomPlayTime}");
-    
     if (animator.IsInTransition(0) && animator.GetCurrentAnimatorStateInfo(0).fullPathHash == stateInfo.fullPathHash)
     {
       animator.SetInteger(hashRandomIdle, -1);

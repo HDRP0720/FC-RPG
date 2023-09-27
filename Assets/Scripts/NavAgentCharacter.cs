@@ -41,8 +41,6 @@ public class NavAgentCharacter : MonoBehaviour
       Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
       if (Physics.Raycast(ray, out RaycastHit hit, 100, groundLayerMask))
       {
-        Debug.Log($"We hit {hit.collider.name} {hit.point}");
-     
         agent.SetDestination(hit.point);
         
         clickMark.position = hit.point + new Vector3(0, 0.01f, 0);
