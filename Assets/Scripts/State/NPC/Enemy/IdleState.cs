@@ -30,17 +30,13 @@ public class IdleState : State<EnemyController>
 
   public override void Update(float deltaTime)
   {
-    Transform enemy = context.SearchEnemy();  // TODO: SearchEnemy
+    Transform enemy = context.SearchEnemy();
     if (enemy)
     {
-      if (context.IsAvailableAttack())        // TODO: IsAvailableAttack
-      {
+      if (context.IsAvailableAttack())
         stateMachine.ChangeState<AttackState>();
-      }
       else
-      {
         stateMachine.ChangeState<MoveState>();
-      }
     }
   }
 }
