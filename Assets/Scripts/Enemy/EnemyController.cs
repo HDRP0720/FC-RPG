@@ -1,26 +1,23 @@
-using System;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-  [Header("Target settings")]
-  public Transform target;
-  public LayerMask targetMask;
-  
-  [Header("Range settings")]
-  public float viewRadius;
   public float attackRange;
   
   private StateMachine<EnemyController> stateMachine;
+  private EnemyFOV fov;
 
   // getter
   public StateMachine<EnemyController> GetStateMachine => stateMachine;
+  public Transform GetTarget => fov.GetNearestTarget;
 
   private void Start()
   {
     stateMachine = new StateMachine<EnemyController>(this, new IdleState());
     stateMachine.AddState(new MoveState());
     stateMachine.AddState(new AttackState());
+
+    fov = GetComponent<EnemyFOV>();
   }
   private void Update()
   {
@@ -31,27 +28,19 @@ public class EnemyController : MonoBehaviour
 
   public Transform SearchEnemy()
   {
-    target = null;
-    Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
-    if (targetsInViewRadius.Length > 0)
-      target = targetsInViewRadius[0].transform;
-
-    return target;
+    return GetTarget;
   }
 
   public bool IsAvailableAttack()
   {
-    if (!target) return false;
+    if (!GetTarget) return false;
 
-    float distance = Vector3.Distance(transform.position, target.position);
+    float distance = Vector3.Distance(transform.position, GetTarget.position);
     return distance <= attackRange;
   }
 
   private void OnDrawGizmos()
   {
-    Gizmos.color = Color.green;
-    Gizmos.DrawWireSphere(transform.position, viewRadius);
-    
     Gizmos.color = Color.red;
     Gizmos.DrawWireSphere(transform.position, attackRange);
   }

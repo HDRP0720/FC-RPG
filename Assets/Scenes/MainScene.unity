@@ -36015,11 +36015,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 724c522919f0f7d45b03fea24938e2a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 256
-  viewRadius: 5
   attackRange: 1.5
 --- !u!143 &4259142669744152398
 CharacterController:
@@ -36080,7 +36075,8 @@ MonoBehaviour:
     m_Bits: 256
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  delaytime: 0.2
 --- !u!4 &4264459489709415928
 Transform:
   m_ObjectHideFlags: 0

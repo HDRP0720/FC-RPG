@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,16 +9,29 @@ public class EnemyFOV : MonoBehaviour
   public float viewRadius = 5f;
   public LayerMask targetMask;
   public LayerMask obstacleMask;
+  public float delaytime = 0.2f;
 
   private List<Transform> visibleTargets = new List<Transform>();
   private Transform nearestTarget;
   private float distanceToTaraget = 0.0f;
+  
+  // getters
+  public List<Transform> GetVisibleTargets => visibleTargets;
+  public Transform GetNearestTarget => nearestTarget;
 
-  private void Update()
+  private void Start()
   {
-    FindVisibleTargets();
+    StartCoroutine(FindTargetsWithDelay(delaytime));
   }
-
+  
+  private IEnumerator FindTargetsWithDelay(float seconds)
+  {
+    while (true)
+    {
+      yield return new WaitForSeconds(seconds);
+      FindVisibleTargets();
+    }
+  }
   private void FindVisibleTargets()
   {
     distanceToTaraget = 0.0f;
@@ -45,5 +57,16 @@ public class EnemyFOV : MonoBehaviour
         }
       }
     }
+  }
+
+  public Vector3 CalcDirFromAngle(float angleInDeg, bool isGlobalAngle)
+  {
+    if (!isGlobalAngle)
+      angleInDeg += transform.eulerAngles.y;
+
+    float x = Mathf.Sin(angleInDeg * Mathf.Deg2Rad);
+    float z = Mathf.Cos(angleInDeg * Mathf.Deg2Rad);
+
+    return new Vector3(x, 0, z);
   }
 }

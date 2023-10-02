@@ -22,7 +22,7 @@ public class MoveState : State<EnemyController>
   public override void OnEnter()
   {
     if (agent != null)
-      agent.SetDestination(context.target.position);
+      agent.SetDestination(context.GetTarget.position);
     
     if(animator != null)
       animator.SetBool(moveHash, true);
@@ -33,7 +33,7 @@ public class MoveState : State<EnemyController>
     Transform enemy = context.SearchEnemy();
     if (enemy)
     {
-      agent.SetDestination(context.target.position);
+      agent.SetDestination(context.GetTarget.position);
       if (agent.remainingDistance > agent.stoppingDistance)
       {
         cc.Move(agent.velocity * deltaTime);
