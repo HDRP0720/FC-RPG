@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class IdleState : State<EnemyController>
 {
+  public bool isPatrol = true;
+  
+  private float minIdleTime = 0.0f;
+  private float maxIdleTime = 3.0f;
+  private float idleTime = 0.0f;
+  
   private Animator animator;
   private CharacterController cc;
   
@@ -26,6 +32,9 @@ public class IdleState : State<EnemyController>
 
     if (cc != null)
       cc.Move(Vector3.zero);
+    
+    if (isPatrol)
+      idleTime = Random.Range(minIdleTime, maxIdleTime);
   }
 
   public override void Update(float deltaTime)
@@ -37,6 +46,10 @@ public class IdleState : State<EnemyController>
         stateMachine.ChangeState<AttackState>();
       else
         stateMachine.ChangeState<MoveState>();
+    }
+    else if (isPatrol && stateMachine.GetElapsedTimeInState > idleTime)
+    {
+      stateMachine.ChangeState<PatrolState>();
     }
   }
 }
