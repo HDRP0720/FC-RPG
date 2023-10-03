@@ -36299,6 +36299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRange: 1.5
+  isPatrol: 1
   patrolPoints:
   - {fileID: 628397684}
   - {fileID: 1983313643}
