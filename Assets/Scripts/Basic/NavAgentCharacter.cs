@@ -9,6 +9,10 @@ public class NavAgentCharacter : MonoBehaviour
   public Transform clickMark;
   public LayerMask groundLayerMask;
   
+  [Header("Footstep Sound Settings")]
+  public AudioClip[] FootstepAudioClips;
+  [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
+  
   private CharacterController cc;
   private Animator animator;
   private NavMeshAgent agent;
@@ -71,6 +75,18 @@ public class NavAgentCharacter : MonoBehaviour
     transform.position = agent.nextPosition;
   }
 
+  private void OnFootstep(AnimationEvent animationEvent)
+  {
+    if (animationEvent.animatorClipInfo.weight > 0.5f)
+    {
+      if (FootstepAudioClips.Length > 0)
+      {
+        var index = Random.Range(0, FootstepAudioClips.Length);
+        AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(cc.center), FootstepAudioVolume);
+      }
+    }
+  }
+  
   private IEnumerator DrawPath()
   {
     lr.enabled = true;

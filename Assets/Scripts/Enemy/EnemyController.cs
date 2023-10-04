@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour, IAttackable, IDamageable
   private EnemyFOV fov;
   private int patrolpointIndex = 0;
   private IdleState idleState = new IdleState();
-  private List<AttackBehaviour> attackBehaviours = new List<AttackBehaviour>();
+  [SerializeField] private List<AttackBehaviour> attackBehaviours = new List<AttackBehaviour>();
   
   private readonly int hitTriggerHash = Animator.StringToHash("HitTrigger");
   #endregion
