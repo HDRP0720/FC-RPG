@@ -9,7 +9,7 @@ public class PatrolState : State<EnemyController>
   private CharacterController cc;
   private NavMeshAgent agent;
   
-  private readonly int moveHash = Animator.StringToHash("Move");
+  private readonly int moveHash = Animator.StringToHash("IsMove");
   private readonly int moveSpeedHash = Animator.StringToHash("MoveSpeed");
   
   public override void OnInitialized()

@@ -8,26 +8,26 @@ public class AttackStateController : MonoBehaviour
   public delegate void OnEnterAttackState();
   public delegate void OnExitAttackState();
 
-  public OnEnterAttackState enterAttackStateHandler;
-  public OnExitAttackState exitAttackStateHandler;
+  public OnEnterAttackState enterAttackHandler;
+  public OnExitAttackState exitAttackHandler;
   
   public bool IsInAttackState { get; private set; }
 
   private void Start()
   {
-    enterAttackStateHandler = new OnEnterAttackState(EnterAttackState);
-    exitAttackStateHandler = new OnExitAttackState(ExitAttackState);
+    enterAttackHandler = new OnEnterAttackState(EnterAttackState);
+    exitAttackHandler = new OnExitAttackState(ExitAttackState);
   }
 
   public void OnStartOfAttackState()
   {
     IsInAttackState = true;
-    enterAttackStateHandler();
+    enterAttackHandler();
   }
   public void OnEndOfAttackState()
   {
     IsInAttackState = false;
-    exitAttackStateHandler();
+    exitAttackHandler();
   }
 
   public void OnCheckAttackCollider(int attackIndex)

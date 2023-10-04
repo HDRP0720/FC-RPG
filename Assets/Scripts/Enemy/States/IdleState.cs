@@ -13,7 +13,7 @@ public class IdleState : State<EnemyController>
   private Animator animator;
   private CharacterController cc;
   
-  private readonly int moveHash = Animator.StringToHash("Move");
+  private readonly int moveHash = Animator.StringToHash("IsMove");
   private readonly int moveSpeedHash = Animator.StringToHash("MoveSpeed");
   
   public override void OnInitialized()

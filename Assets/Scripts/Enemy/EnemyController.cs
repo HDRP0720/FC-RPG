@@ -1,10 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class EnemyController : MonoBehaviour, IAttackable, IDamageable
 {
+  #region Variables
   public float attackRange;
+  public Transform hitTransform;
   public Transform projectileTransform;
+  
+  [Header("HP settings")]
+  public int maxHealth = 100;
+  public int currentHealth;
   
   [Header("Patrol settings")]
   public bool isPatrol = false;
@@ -12,17 +19,20 @@ public class EnemyController : MonoBehaviour, IAttackable, IDamageable
   [HideInInspector] public Transform targetPatrolPoint;
   
   private StateMachine<EnemyController> stateMachine;
+  private Animator animator;
   private EnemyFOV fov;
   private int patrolpointIndex = 0;
   private IdleState idleState = new IdleState();
   private List<AttackBehaviour> attackBehaviours = new List<AttackBehaviour>();
+  
+  private readonly int hitTriggerHash = Animator.StringToHash("HitTrigger");
+  #endregion
 
-  // getter
+  #region Properties
   public StateMachine<EnemyController> GetStateMachine => stateMachine;
   public Transform GetTarget => fov?.GetNearestTarget;
   public LayerMask GetTargetMask => fov.targetMask;
-  public AttackBehaviour CurrentAttackBehaviour { get; private set; }
-  public bool IsAlive { get; private set; }
+  #endregion
 
   private void Start()
   {
@@ -32,7 +42,10 @@ public class EnemyController : MonoBehaviour, IAttackable, IDamageable
     stateMachine.AddState(new AttackState());
     stateMachine.AddState(new DeadState());
 
+    animator = GetComponent<Animator>();
     fov = GetComponent<EnemyFOV>();
+
+    currentHealth = maxHealth;
     
     InitAttackBehaviour();
   }
@@ -71,17 +84,6 @@ public class EnemyController : MonoBehaviour, IAttackable, IDamageable
     return targetPatrolPoint;
   }
   
-  public void OnExecuteAttack(int attackIndex)
-  {
-    if(CurrentAttackBehaviour != null && GetTarget != null)
-      CurrentAttackBehaviour.ExcuteAttack(GetTarget.gameObject, projectileTransform);
-  }
-
-  public void TakeDamage(int damage, GameObject hitEffectPrefab)
-  {
-    
-  }
-
   private void InitAttackBehaviour()
   {
     foreach (AttackBehaviour behaviour in attackBehaviours)
@@ -92,6 +94,7 @@ public class EnemyController : MonoBehaviour, IAttackable, IDamageable
       behaviour.targetMask = GetTargetMask;
     }
   }
+  
   private void CheckAttackBehaviour()
   {
     if (CurrentAttackBehaviour == null || !CurrentAttackBehaviour.IsAvailable)
@@ -109,6 +112,33 @@ public class EnemyController : MonoBehaviour, IAttackable, IDamageable
       }
     }
   }
+
+  #region IAttackable interface
+  public AttackBehaviour CurrentAttackBehaviour { get; private set; }
+  public void OnExecuteAttack(int attackIndex)
+  {
+    if(CurrentAttackBehaviour != null && GetTarget != null)
+      CurrentAttackBehaviour.ExcuteAttack(GetTarget.gameObject, projectileTransform);
+  }
+  #endregion
+
+  #region IDamageable interface
+  public bool IsAlive => currentHealth > 0;
+  public void TakeDamage(int damage, GameObject hitEffectPrefab)
+  {
+    if (!IsAlive) return;
+
+    currentHealth -= damage;
+
+    if (hitEffectPrefab)
+      Instantiate(hitEffectPrefab, hitTransform);
+    
+    if(IsAlive)
+      animator?.SetTrigger(hitTriggerHash);
+    else
+      stateMachine.ChangeState<DeadState>();
+  }
+  #endregion
   
   private void OnDrawGizmos()
   {
